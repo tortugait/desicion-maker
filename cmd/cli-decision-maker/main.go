@@ -26,7 +26,7 @@ func main() {
 
 		// Exit the program
 		if strings.ToLower(question) == "exit" {
-			fmt.Println("Thanks for using the app. Goodbye!")
+			fmt.Println("Thank you for using the app. Goodbye!")
 			break
 		}
 
