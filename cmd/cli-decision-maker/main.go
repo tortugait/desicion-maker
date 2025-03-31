@@ -25,7 +25,7 @@ func main() {
 		question := strings.TrimSpace(scanner.Text())
 
 		// Exit the program
-		if strings.ToLower(question) == "exit" {
+		if strings.EqualFold(question, "exit") {
 			fmt.Println("Thank you for using the app. Goodbye!")
 			break
 		}
@@ -34,7 +34,7 @@ func main() {
 			continue
 		}
 
-		if shouldDoIt() == true {
+		if shouldDoIt() {
 			fmt.Println("Yes")
 		} else {
 			fmt.Println("No")
@@ -44,7 +44,7 @@ func main() {
 
 func shouldDoIt() bool {
 	src := rand.NewSource(time.Now().UnixNano())
-	rng := rand.New(src)
+	rng := rand.New(src) //nolint:gosec
 
 	return rng.Intn(2) == 1
 }
