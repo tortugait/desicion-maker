@@ -91,7 +91,7 @@ func shouldDoIt() bool {
 	src := rand.NewSource(time.Now().UnixNano())
 	rng := rand.New(src) //nolint:gosec
 
-	return rng.Intn(2) == 1
+	return rng.Intn(2) == 1 //nolint:gomnd
 }
 
 func initHTTPServer(conf config.HTTPServer, handlers http.Handlers) (*http.Server, error) {
