@@ -1,0 +1,164 @@
+openapi: 3.0.3
+info:
+  title: Decision Maker API
+  version: 1.0.0
+  description: Private API for our frontend client.
+  contact:
+    name: Core Team
+servers:
+  - url: http://localhost:{port}/api/v1
+    description: API server
+    variables:
+      port:
+        default: '8080'
+tags:
+  - name: Question
+  - name: System
+paths:
+  /status:
+    get:
+      operationId: get_app_status
+      tags:
+        - System
+      summary: Get app status.
+      description: Use this endpoint to check if the application is up and running. If status OK is not returned then there is an issue.
+      responses:
+        '200':
+          description: Normal state response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/appState'
+
+  /ask:
+    post:
+      operationId: ask_question
+      tags:
+        - Question
+      summary: Ask a question.
+      description: Ask a question to receive a yes or no answer.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/yesOrNoQuestionRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/yesOrNoQuestionResponse'
+        '400':
+          $ref: '#/components/responses/badRequestResponse'
+        '422':
+          $ref: '#/components/responses/validationErrResponse'
+        '500':
+          $ref: '#/components/responses/internalErrorResponse'
+
+components:
+  responses:
+    yesOrNoQuestionResponse:
+      description: A yes or no answer to a question.
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                type: object
+                description: Question response data
+                required:
+                  - answer
+                properties:
+                  answer:
+                    type: string
+                    description: A simple yes or no answer to the question.
+                    example: "Yes"
+
+    badRequestResponse:
+      description: Bad request, happens when the params were not successfully parsed.
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - error
+            properties:
+              error:
+                type: string
+                description: Auto generated error message. Not human readable but OK.
+                example: "code=400, message=Syntax error: offset=107, error=invalid character '\\n' in string literal, internal=invalid character '\\n' in string literal"
+
+    validationErrResponse:
+      description: Validation error.
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - errors
+            properties:
+              errors:
+                type: array
+                items:
+                  $ref: '#/components/schemas/validationError'
+          example:
+            errors:
+              - field: question
+                tag: required
+                value: ""
+
+
+    internalErrorResponse:
+      description: Internal server error response. Unexpected error when something went totally wrong.
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - error
+            properties:
+              error:
+                type: string
+                description: A human-readable error message.
+                example: "internal server error"
+
+  schemas:
+    validationError:
+      type: object
+      required:
+        - field
+        - tag
+        - value
+      properties:
+        field:
+          type: string
+          example: shortMarketType
+        tag:
+          type: string
+          example: oneof
+        value:
+          type: string
+          example: fweg
+
+    yesOrNoQuestionRequest:
+      type: object
+      description: Request body for a question
+      required:
+        - question
+      properties:
+        question:
+          type: string
+          description: Your question
+          example: "Should I go to school tomorrow?"
+
+    appState:
+      type: object
+      description: App state description response
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          description: A human readable status
+          example: "OK"
