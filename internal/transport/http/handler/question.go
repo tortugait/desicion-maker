@@ -1,14 +1,19 @@
 package handler
 
 import (
-	"github.com/labstack/echo/v4"
 	"math/rand"
 	"net/http"
 	"time"
+
+	"github.com/labstack/echo/v4"
 )
 
-type QuestionRequest struct {
+type questionRequest struct {
 	Question string `json:"question"`
+}
+
+type questionResponse struct {
+	Data any `json:"data"`
 }
 
 type question struct{}
@@ -18,7 +23,7 @@ func NewQuestion() question {
 }
 
 func (h question) Ask(eCtx echo.Context) error {
-	var req QuestionRequest
+	var req questionRequest
 	if err := eCtx.Bind(&req); err != nil {
 		return eCtx.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid JSON"})
 	}
@@ -31,7 +36,10 @@ func (h question) Ask(eCtx echo.Context) error {
 		answer = "Yes"
 	}
 
-	return eCtx.JSON(http.StatusOK, map[string]string{
-		"answer": answer,
-	})
+	res := questionResponse{
+		Data: map[string]string{
+			"answer": answer,
+		},
+	}
+	return eCtx.JSON(http.StatusOK, res)
 }
