@@ -28,11 +28,8 @@ func (h question) Ask(eCtx echo.Context) error {
 		return eCtx.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid JSON"})
 	}
 
-	src := rand.NewSource(time.Now().UnixNano())
-	rng := rand.New(src)
-
 	answer := "No"
-	if rng.Intn(2) == 1 {
+	if shouldDoIt() {
 		answer = "Yes"
 	}
 
@@ -42,4 +39,11 @@ func (h question) Ask(eCtx echo.Context) error {
 		},
 	}
 	return eCtx.JSON(http.StatusOK, res)
+}
+
+func shouldDoIt() bool {
+	src := rand.NewSource(time.Now().UnixNano())
+	rng := rand.New(src) //nolint:gosec
+
+	return rng.Intn(2) == 1 //nolint:gomnd
 }
