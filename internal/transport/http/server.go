@@ -33,14 +33,8 @@ type (
 	}
 
 	Handlers struct {
-		Status              echo.HandlerFunc
-		AddActivePair       echo.HandlerFunc
-		UpdateActivePair    echo.HandlerFunc
-		ListActivePair      echo.HandlerFunc
-		AddCandidatePair    echo.HandlerFunc
-		UpdateCandidatePair echo.HandlerFunc
-		ListCandidatePair   echo.HandlerFunc
-		ListExchange        echo.HandlerFunc
+		Status echo.HandlerFunc
+		Ask    echo.HandlerFunc
 	}
 
 	Server struct {
