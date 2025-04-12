@@ -3,7 +3,6 @@ package http
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-
 	"github.com/tortugait/desicion-maker/internal/log"
 )
 
@@ -31,4 +30,5 @@ func InitRoutes(e *echo.Echo, handlers Handlers) {
 	)
 
 	v1.GET("/status", handlers.Status)
+	v1.POST("/ask", handlers.Ask)
 }

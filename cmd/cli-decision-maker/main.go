@@ -27,9 +27,11 @@ func main() {
 	// init main App context
 	appCtx, cancelFunc := context.WithCancel(context.Background())
 
+	question := httpHandler.NewQuestion()
 	httpSysHandler := httpHandler.NewSystem()
 	handlers := http.Handlers{
 		Status: httpSysHandler.GetStatus,
+		Ask:    question.Ask,
 	}
 	httpSrv, err := initHTTPServer(conf.HTTPServer, handlers)
 	if err != nil {
