@@ -77,6 +77,8 @@ linters:
     - varnamelen
     - wrapcheck
     - wsl
+    - gomnd
+    - execinquery
 
 issues:
   exclude:

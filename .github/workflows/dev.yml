@@ -1,0 +1,81 @@
+name: Deploy Pipeline
+
+on:
+  push:
+    branches:
+      - '**'           # triggers on all branch pushes
+  create:
+    branches:
+      - '**'           # triggers on new branch creation
+  pull_request:
+    branches:
+      - main
+    types: [closed]
+
+jobs:
+  setup:
+    if: github.event.pull_request.merged == true || github.event_name == 'push'
+    runs-on: decision-maker
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Copy .env
+        run: cp ../../../../.env .
+
+  build:
+    needs: setup
+    runs-on: decision-maker
+    steps:
+      - name: Run make build
+        run: make build
+
+  test:
+    needs: setup
+    runs-on: decision-maker
+    services:
+      mysql:
+        image: percona/percona-server:8.0.36-28.1-multi
+        env:
+          MYSQL_DATABASE: test
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+        ports:
+          - 4306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      TEST_MYSQL_DSN: "root@(127.0.0.1:4306)/test?tls=false"
+
+    steps:
+      - name: Wait for MySQL
+        run: |
+          for i in {1..30}; do
+            if mysqladmin ping -h127.0.0.1 --silent; then
+              echo "MySQL is ready"
+              break
+            fi
+            echo "Waiting for MySQL..."
+            sleep 2
+          done
+
+      - name: Run tests
+        run: make test
+
+  lint:
+    needs: setup
+    runs-on: decision-maker
+    steps:
+      - name: Run make lint
+        run: make lint
+
+  deploy:
+    needs: [build, test, lint]
+    runs-on: decision-maker
+    if: success()  # Only run if build & test & lint succeeded
+    steps:
+      - name: Restart pmgo service
+        run: pmgo restart decision-maker
