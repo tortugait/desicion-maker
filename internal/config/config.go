@@ -6,6 +6,15 @@ import "time"
 type (
 	App struct {
 		HTTPServer `env-prefix:"HTTP_SERVER_"`
+		Common
+	}
+
+	Common struct {
+		LoggerLevel string `env:"LOGGER_LEVEL" env-default:"info"`
+		EnvID       string `env:"ENVID"        env-required:""`
+		AppName     string `env:"APP_NAME"     env-required:""`
+		AppVersion  string `env:"APP_VERSION"  env-required:""`
+		HostName    string `env:"HOSTNAME"     env-required:""`
 	}
 
 	HTTPServer struct {
