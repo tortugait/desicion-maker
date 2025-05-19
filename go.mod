@@ -7,6 +7,7 @@ toolchain go1.24.3
 replace github.com/tortugait/desicion-maker => ./
 
 require (
+	github.com/cohesion-org/deepseek-go v1.3.1
 	github.com/go-playground/validator/v10 v10.26.0
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 	github.com/joho/godotenv v1.5.1
@@ -17,7 +18,6 @@ require (
 
 require (
 	github.com/BurntSushi/toml v1.2.1 // indirect
-	github.com/cohesion-org/deepseek-go v1.3.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.8 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
