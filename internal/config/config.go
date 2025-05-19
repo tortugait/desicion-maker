@@ -7,6 +7,7 @@ type (
 	App struct {
 		HTTPServer `env-prefix:"HTTP_SERVER_"`
 		Common
+		DeepSeek `env-prefix:"DEEP_SEEK_"`
 	}
 
 	Common struct {
@@ -23,5 +24,10 @@ type (
 		HandlerTimeout  time.Duration `env:"HANDLER_TIMEOUT" env-default:"10s" env-description:"Timeout to handle request, zero means no timeout"`
 		CheckTimeout    time.Duration `env:"CHECK_TIMEOUT" env-default:"10s" env-description:"Timeout to perform healthcheck, zero means no timeout"`
 		ShutdownTimeout time.Duration `env:"SHUTDOWN_TIMEOUT" env-default:"5s" env-description:"Timeout to gracefully shutdown API server"`
+	}
+
+	DeepSeek struct {
+		BaseURL string `env:"BASE_URL" env-required:""`
+		APIKey  string `env:"API_KEY" env-required:""`
 	}
 )

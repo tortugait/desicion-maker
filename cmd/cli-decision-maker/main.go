@@ -4,14 +4,13 @@ import (
 	"bufio"
 	"context"
 	"fmt"
-	"math/rand"
 	"os"
 	"os/signal"
 	"strings"
 	"syscall"
-	"time"
 
 	"github.com/tortugait/desicion-maker/internal/log"
+	"github.com/tortugait/desicion-maker/internal/service"
 )
 
 func main() {
@@ -46,7 +45,7 @@ func main() {
 					continue
 				}
 
-				if shouldDoIt() {
+				if service.ShouldDoIt() {
 					fmt.Println("Yes")
 				} else {
 					fmt.Println("No")
@@ -60,11 +59,4 @@ func main() {
 	s := <-osSignals
 	log.Logger.Infof("received signal: %s. Canceling background jobs and exiting...", s)
 	cancelFunc()
-}
-
-func shouldDoIt() bool {
-	src := rand.NewSource(time.Now().UnixNano())
-	rng := rand.New(src) //nolint:gosec
-
-	return rng.Intn(2) == 1 //nolint:gomnd
 }
