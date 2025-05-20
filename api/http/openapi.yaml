@@ -69,11 +69,16 @@ components:
                 description: Question response data
                 required:
                   - answer
+                  - reason
                 properties:
                   answer:
                     type: string
                     description: A simple yes or no answer to the question.
                     example: "Yes"
+                  reason:
+                    type: string
+                    description: A humorous explanation of the given answer
+                    example: "Because with AI you're smarter than most teachers"
 
     badRequestResponse:
       description: Bad request, happens when the params were not successfully parsed.
