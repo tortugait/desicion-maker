@@ -16,6 +16,7 @@ import (
 func main() {
 	// init main App context
 	appCtx, cancelFunc := context.WithCancel(context.Background())
+	decisionSrv := service.NewDecisionSrv(service.NewDeepSeekSrv(service.DeepSeekConf{}))
 
 	go func() {
 		fmt.Println("Decision-Maker CLI App")
@@ -45,7 +46,7 @@ func main() {
 					continue
 				}
 
-				if service.ShouldDoIt() {
+				if decisionSrv.ShouldDoIt() {
 					fmt.Println("Yes")
 				} else {
 					fmt.Println("No")

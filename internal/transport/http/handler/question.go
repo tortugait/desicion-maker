@@ -16,10 +16,14 @@ type questionResponse struct {
 	Data any `json:"data"`
 }
 
-type question struct{}
+type question struct {
+	decisionSrv service.DecisionSrv
+}
 
-func NewQuestion() question {
-	return question{}
+func NewQuestion(decisionSrv service.DecisionSrv) question {
+	return question{
+		decisionSrv: decisionSrv,
+	}
 }
 
 func (h question) Ask(eCtx echo.Context) error {
@@ -29,7 +33,7 @@ func (h question) Ask(eCtx echo.Context) error {
 	}
 
 	answer := "No"
-	if service.ShouldDoIt() {
+	if h.decisionSrv.ShouldDoIt() {
 		answer = "Yes"
 	}
 

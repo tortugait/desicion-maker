@@ -10,6 +10,7 @@ import (
 
 	"github.com/tortugait/decision-maker/internal/config"
 	"github.com/tortugait/decision-maker/internal/log"
+	"github.com/tortugait/decision-maker/internal/service"
 	"github.com/tortugait/decision-maker/internal/transport/http"
 	httpHandler "github.com/tortugait/decision-maker/internal/transport/http/handler"
 )
@@ -30,7 +31,12 @@ func main() {
 	// init main App context
 	appCtx, cancelFunc := context.WithCancel(context.Background())
 
-	question := httpHandler.NewQuestion()
+	decisionSrv := service.NewDecisionSrv(service.NewDeepSeekSrv(service.DeepSeekConf{
+		BaseURL: conf.BaseURL,
+		APIKey:  conf.APIKey,
+	}))
+
+	question := httpHandler.NewQuestion(decisionSrv)
 	httpSysHandler := httpHandler.NewSystem()
 	handlers := http.Handlers{
 		Status: httpSysHandler.GetStatus,

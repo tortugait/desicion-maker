@@ -103,7 +103,7 @@ linters:
     - prealloc       # Suggest preallocating slices if length is known up-front (performance optimization):contentReference[oaicite:83]{index=83}
 #    - wrapcheck      # Ensure errors from external packages are wrapped before propagating (adds context):contentReference[oaicite:84]{index=84}
 #    - exhaustruct    # (Optional) Check that struct literals initialize all fields (exhaustive struct literal):contentReference[oaicite:85]{index=85}
-    - godox          # Report any TODO, FIXME, BUG comments left in code (to avoid merging forgotten tasks):contentReference[oaicite:86]{index=86}
+#    - godox          # Report any TODO, FIXME, BUG comments left in code (to avoid merging forgotten tasks):contentReference[oaicite:86]{index=86}
 #    - tagalign       # Enforce alignment of struct tags (neat formatting of tag comments):contentReference[oaicite:87]{index=87}
 
   # No 'disable' list needed since we start from none and only enable trusted linters.
@@ -147,7 +147,7 @@ linters:
         source: '// ?(nolint|TODO)'
         linters: [revive]  # Similarly, skip package comment format complaints if nolint/TODO is there:contentReference[oaicite:101]{index=101}
       # Exclude some linters entirely from test files (_test.go), where their warnings are less relevant:
-      - path: '_test\\.go'
+      - path: '_test\.go'
         linters:
           - bodyclose    # In tests, not closing HTTP bodies is often acceptable or intentional
           - dupl         # Duplicate code in tests is more tolerable (test cases may repeat setup)
