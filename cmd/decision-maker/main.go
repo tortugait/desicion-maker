@@ -8,10 +8,10 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/tortugait/desicion-maker/internal/config"
-	"github.com/tortugait/desicion-maker/internal/log"
-	"github.com/tortugait/desicion-maker/internal/transport/http"
-	httpHandler "github.com/tortugait/desicion-maker/internal/transport/http/handler"
+	"github.com/tortugait/decision-maker/internal/config"
+	"github.com/tortugait/decision-maker/internal/log"
+	"github.com/tortugait/decision-maker/internal/transport/http"
+	httpHandler "github.com/tortugait/decision-maker/internal/transport/http/handler"
 )
 
 func main() {

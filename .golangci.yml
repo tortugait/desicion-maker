@@ -30,8 +30,8 @@ formatters:
       sections:
         - standard   # Standard library packages:contentReference[oaicite:10]{index=10}
         - default    # Default (third-party) packages:contentReference[oaicite:11]{index=11}
-        - prefix(github.com/your-org/)   # Company or project-specific external packages (common prefix):contentReference[oaicite:12]{index=12}
-        - prefix(github.com/your-org/your-project)  # Current project’s module imports:contentReference[oaicite:13]{index=13}
+        - prefix(github.com/tortugait/)   # Company or project-specific external packages (common prefix):contentReference[oaicite:12]{index=12}
+        - prefix(github.com/tortugait/decision-maker  # Current project’s module imports:contentReference[oaicite:13]{index=13}
         - blank      # Blank imports (for side effects), separated by an empty line:contentReference[oaicite:14]{index=14}
       custom-order: true        # Use the above custom order instead of the default order:contentReference[oaicite:15]{index=15}
       no-inline-comments: true  # Disallow import-line comments (enforce clean imports):contentReference[oaicite:16]{index=16}

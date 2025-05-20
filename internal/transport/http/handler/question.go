@@ -4,7 +4,8 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	"github.com/tortugait/desicion-maker/internal/service"
+
+	"github.com/tortugait/decision-maker/internal/service"
 )
 
 type questionRequest struct {

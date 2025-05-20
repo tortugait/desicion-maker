@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="decision-maker" type="GoApplicationRunConfiguration" factoryName="Go Application">
-    <module name="desicion-maker" />
+    <module name="decision-maker" />
     <working_directory value="$PROJECT_DIR$" />
     <EXTENSION ID="net.ashald.envfile">
       <option name="IS_ENABLED" value="false" />
@@ -13,7 +13,7 @@
       </ENTRIES>
     </EXTENSION>
     <kind value="DIRECTORY" />
-    <package value="github.com/tortugait/desicion-maker" />
+    <package value="github.com/tortugait/decision-maker" />
     <directory value="$PROJECT_DIR$/cmd/decision-maker" />
     <filePath value="$PROJECT_DIR$" />
     <output_directory value="$PROJECT_DIR$/bin" />

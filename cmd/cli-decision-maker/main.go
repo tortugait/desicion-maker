@@ -9,8 +9,8 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/tortugait/desicion-maker/internal/log"
-	"github.com/tortugait/desicion-maker/internal/service"
+	"github.com/tortugait/decision-maker/internal/log"
+	"github.com/tortugait/decision-maker/internal/service"
 )
 
 func main() {

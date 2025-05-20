@@ -1,4 +1,4 @@
-module github.com/tortugait/desicion-maker
+module github.com/tortugait/decision-maker
 
 go 1.24.1
 
