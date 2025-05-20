@@ -13,7 +13,6 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
-
 	"github.com/tortugait/desicion-maker/internal/log"
 )
 
@@ -110,7 +109,7 @@ func (s *Server) Check(ctx context.Context) error {
 	if err != nil {
 		return fmt.Errorf("do check request: %w", err)
 	}
-	defer resp.Body.Close() //nolint:errcheck
+	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
 		return errors.New("http server is not available at the moment") //nolint:err113
@@ -129,7 +128,7 @@ func prepareDocs(basePath string) error {
 	if err != nil {
 		return fmt.Errorf("open docs output for writing: %w", err)
 	}
-	defer out.Close() //nolint:errcheck
+	defer out.Close()
 
 	if err := t.Execute(out, map[string]string{
 		"base_path": basePath + v1DocsRoutePath,

@@ -5,9 +5,11 @@ import (
 	"time"
 )
 
+const maxOptions = 2
+
 func ShouldDoIt() bool {
 	src := rand.NewSource(time.Now().UnixNano())
 	rng := rand.New(src) //nolint:gosec
 
-	return rng.Intn(2) == 1 //nolint:gomnd
+	return rng.Intn(maxOptions) == 1
 }

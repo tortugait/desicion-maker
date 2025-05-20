@@ -25,7 +25,7 @@ func TestLoad(t *testing.T) { //nolint:tparallel
 		{
 			name: "successful load from env file",
 			setup: func() {
-				_ = os.WriteFile(envPath, []byte("APP_NAME=test_app\nAPP_VERSION=dev"), 0o644)
+				_ = os.WriteFile(envPath, []byte("APP_NAME=test_app\nAPP_VERSION=dev"), 0o600)
 			},
 			cleanup: func() {
 				_ = os.Remove(envPath)
@@ -36,7 +36,7 @@ func TestLoad(t *testing.T) { //nolint:tparallel
 		{
 			name: "stat error on env file",
 			setup: func() {
-				_ = os.WriteFile(envPath, []byte("APP_NAME=test_app\nAPP_VERSION=dev"), 0o644)
+				_ = os.WriteFile(envPath, []byte("APP_NAME=test_app\nAPP_VERSION=dev"), 0o600)
 				_ = os.Chmod(envPath, 0o000)
 			},
 			cleanup: func() {

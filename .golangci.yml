@@ -1,107 +1,159 @@
-# See good examples here:
-# https://github.com/golangci/golangci-lint/blob/master/.golangci.reference.yml
+version: "2"  # Use configuration schema version 2 (for golangci-lint v2.x)
 
+# **Run settings** – general execution controls (concurrency, timeouts, path modes, etc.)
 run:
-  timeout: 5m
+  concurrency: 4       # Limit to 4 concurrent linters to avoid saturating CPU (default uses all CPUs:contentReference[oaicite:0]{index=0})
+  timeout: 5m          # Global timeout for the linter run (5 minutes) to prevent hangs:contentReference[oaicite:1]{index=1}:contentReference[oaicite:2]{index=2}
+  relative-path-mode: gomod  # Use paths relative to go.mod root for consistency across environments:contentReference[oaicite:3]{index=3}:contentReference[oaicite:4]{index=4}
+  allow-parallel-runners: true   # Allow multiple golangci-lint instances at once (don’t use file locking)
+  allow-serial-runners: true    # If another instance is running, wait instead of failing (serializes runners)
 
-linters-settings:
-  errcheck:
-    check-type-assertions: true
-  funlen:
-    lines: 100
-    statements: 60
-  govet:
-    enable-all: true
-    disable:
-      - fieldalignment
-  gofmt:
-    simplify: true
-  gci:
-    sections:
-      - standard
-      - default
-      - prefix(gitlab.b2bdev.pro)
-      - localmodule
-  gocyclo:
-    min-complexity: 20
-  cyclop:
-    max-complexity: 20
-  goconst:
-    min-len: 3
-    min-occurrences: 3
-  misspell:
-    locale: US
-  lll:
-    line-length: 120
-    tab-width: 4
-  unparam:
-    check-exported: true
-  nakedret:
-    max-func-lines: 1
-  prealloc:
-    simple: true
-    range-loops: true
-    for-loops: false
-  gocritic:
-    enabled-tags:
-      - performance
-      - diagnostic
-    settings:
-      captLocal:
-        paramsOnly: true
-      rangeValCopy:
-        sizeThreshold: 32
-  tagliatelle:
-    case:
-      use-field-name: true
-      rules:
-        json: camel
-  revive:
-    ignore-generated-header: true
-
-linters:
-  enable-all: true
-  fast: false
-  disable:
-    - depguard
-    - exhaustive
-    - exhaustruct
-    - forbidigo
-    - godox
-    - goimports
-    - gomoddirectives
-    - mnd
-    - nlreturn
-    - tagalign
-    - testpackage
-    - varnamelen
-    - wrapcheck
-    - wsl
-    - gomnd
-    - execinquery
-
+# **Issue reporting** – configure how issues are reported and filtered
 issues:
-  exclude:
-    - ST1000 # disable package comments check
-  exclude-rules:
-    - linters:
-        - dupl
-        - gochecknoglobals
-        - gosec
-        - maintidx
-        - funlen
-        - err113
-        - lll
-      path: _test.go
+  max-same-issues: 50  # Report up to 50 occurrences of the same issue text (default 3):contentReference[oaicite:5]{index=5}
 
-    - linters:
-        - govet
-      text: "declaration of \"err\" shadows declaration"
+# **Formatters** – integrate format checkers (these run as linters to enforce formatting)
+formatters:
+  enable:
+    - goimports    # Check that code is goimports-formatted (includes gofmt + import organizing)
+    - golines      # Enforce maximum line length by checking/fixing long lines
+    - gci          # Ensure imports are grouped and ordered properly (using the gci tool)
+  settings:
+    goimports:
+      # Group project imports separately: list your module path to treat as "local" imports
+      local-prefixes:
+        - github.com/your-org/your-project  # ← REPLACE with your module import path:contentReference[oaicite:6]{index=6}:contentReference[oaicite:7]{index=7}
+    golines:
+      max-len: 120  # Set max line length to 120 characters (default is 100):contentReference[oaicite:8]{index=8}:contentReference[oaicite:9]{index=9}
+    gci:
+      # Define import grouping sections for gci (std, third-party, and project imports):
+      sections:
+        - standard   # Standard library packages:contentReference[oaicite:10]{index=10}
+        - default    # Default (third-party) packages:contentReference[oaicite:11]{index=11}
+        - prefix(github.com/your-org/)   # Company or project-specific external packages (common prefix):contentReference[oaicite:12]{index=12}
+        - prefix(github.com/your-org/your-project)  # Current project’s module imports:contentReference[oaicite:13]{index=13}
+        - blank      # Blank imports (for side effects), separated by an empty line:contentReference[oaicite:14]{index=14}
+      custom-order: true        # Use the above custom order instead of the default order:contentReference[oaicite:15]{index=15}
+      no-inline-comments: true  # Disallow import-line comments (enforce clean imports):contentReference[oaicite:16]{index=16}
+      no-prefix-comments: true  # Disallow comments above import groups (e.g., no manual section labels):contentReference[oaicite:17]{index=17}
+      no-lex-order: true        # Do not require lexical ordering within sections (rely on grouping order)
 
-    - linters:
-        - lll
-      source: "^//( )?go:generate "
+# **Linter selection** – enable a curated set of reliable linters (disable unstable/deprecated ones)
+linters:
+  default: none  # Start with no default linters (avoid enabling all by default):contentReference[oaicite:18]{index=18}
+  enable:
+    - staticcheck    # Static analysis (Go vet on steroids: code correctness, bugs, performance):contentReference[oaicite:19]{index=19}
+    - govet          # Go vet analyzers (reports suspicious constructs like fmt.Printf arg mismatches):contentReference[oaicite:20]{index=20}
+#    - revive         # Modern lint rules (style best practices, replaces golint):contentReference[oaicite:21]{index=21}
+    - errcheck       # Checks that error return values are used (no unchecked errors):contentReference[oaicite:22]{index=22}
+    - gosec          # Security checks (detect common vulnerabilities):contentReference[oaicite:23]{index=23}:contentReference[oaicite:24]{index=24}
+    - bodyclose      # Ensure HTTP response bodies are closed properly:contentReference[oaicite:25]{index=25}
+    - dupl           # Detect duplicate code blocks (copy-pasted code):contentReference[oaicite:26]{index=26}
+    - errname        # Enforce standard naming for error vars/types (e.g. ErrSomeError):contentReference[oaicite:27]{index=27}
+    - errorlint      # Find issues with Go 1.13+ error wrapping (`fmt.Errorf` %w usage, etc.):contentReference[oaicite:28]{index=28}
+    - exhaustive     # Check exhaustiveness of enum `switch` statements (all cases covered):contentReference[oaicite:29]{index=29}
+    - funlen         # Warn on excessively long functions (too many lines or statements):contentReference[oaicite:32]{index=32}
+    - gocognit       # Check cognitive complexity of functions (nested logic, etc.):contentReference[oaicite:33]{index=33}:contentReference[oaicite:34]{index=34}
+    - goconst        # Find repeated string/number literals that could be constants:contentReference[oaicite:35]{index=35}
+    - gocritic       # Powerful suite of linters (catches bugs, performance issues, style):contentReference[oaicite:36]{index=36}
+    - gocyclo        # Cyclomatic complexity check (complex functions with many branches):contentReference[oaicite:37]{index=37}:contentReference[oaicite:38]{index=38}
+    - godot          # Enforce full-sentence comments (comments should end with a period):contentReference[oaicite:39]{index=39}
+    - gomoddirectives  # Check go.mod directives (replace/retract/exclude usage):contentReference[oaicite:40]{index=40}
+    - goprintffuncname # Ensure custom printf-like funcs are named with “f” suffix (Printf, etc.):contentReference[oaicite:41]{index=41}
+    - iface          # Detect flawed interface usage (interface pollution, etc.):contentReference[oaicite:42]{index=42}
+    - ineffassign    # Detect assignments to variables that are never used (ineffective assignments):contentReference[oaicite:43]{index=43}
+    - intrange       # Suggest using range loops instead of index loops where possible:contentReference[oaicite:44]{index=44}
+    - loggercheck    # Verify consistent key/value pairs in logging (zap, klog, etc.):contentReference[oaicite:45]{index=45}
+    - makezero       # Flag slice declarations with non-zero length (suggest preallocating or using zero-length):contentReference[oaicite:46]{index=46}
+    - mirror         # Find incorrect mirror operations on byte slices/strings (potential bugs):contentReference[oaicite:47]{index=47}
+    - mnd            # Magic number detector (warn on unannotated numeric constants):contentReference[oaicite:48]{index=48}
+    - musttag        # Ensure struct fields that are marshaled have appropriate tags:contentReference[oaicite:49]{index=49}
+    - nakedret       # Discourage naked returns in longer functions (affects readability):contentReference[oaicite:50]{index=50}
+    - nestif         # Warn about deeply nested if-statements (consider refactoring):contentReference[oaicite:51]{index=51}
+    - nilerr         # Detect returning nil error after an error check (possible logic bug):contentReference[oaicite:52]{index=52}
+    - nilnesserr     # Combined nilness analysis – flag returning a nil error when err was non-nil:contentReference[oaicite:53]{index=53}
+    - nilnil         # Check functions that return both nil error and nil result (invalid state):contentReference[oaicite:54]{index=54}
+    - noctx          # Warn if `context.Context` is missing in outbound calls (e.g., HTTP requests):contentReference[oaicite:55]{index=55}
+    - nolintlint     # Ensure //nolint directives are well-formed and not overused:contentReference[oaicite:56]{index=56}
+    - nonamedreturns # Flag use of named return parameters (can reduce clarity):contentReference[oaicite:57]{index=57}
+    - nosprintfhostport # Detect misuse of `fmt.Sprintf` to build "host:port" strings (prefer net.JoinHostPort):contentReference[oaicite:58]{index=58}
+    - perfsprint     # Suggest faster alternatives for `fmt.Sprintf` in certain cases (performance):contentReference[oaicite:59]{index=59}
+    - predeclared    # Detect shadowing of Go predeclared identifiers (e.g., redefining `len`, `error`):contentReference[oaicite:60]{index=60}
+    - promlinter     # Check Prometheus metric naming conventions (if using Prometheus):contentReference[oaicite:61]{index=61}
+    - protogetter    # Enforce using generated proto getters instead of direct field access (if using protos):contentReference[oaicite:62]{index=62}
+    - reassign       # Prevent reassigning package-level variables (which can be confusing):contentReference[oaicite:63]{index=63}
+    - recvcheck      # Ensure method receiver names and pointers vs values are used consistently:contentReference[oaicite:64]{index=64}
+    - rowserrcheck   # Verify `sql.Rows.Err()` is checked after iteration (DB rows error handling):contentReference[oaicite:66]{index=66}
+    - sloglint       # Enforce structured logging conventions when using log/slog (if applicable):contentReference[oaicite:67]{index=67}
+    - spancheck      # Check OpenTelemetry span usage (span lifecycle mistakes):contentReference[oaicite:68]{index=68}
+    - sqlclosecheck  # Ensure `sql.Stmt` and `sql.Rows` are closed to prevent resource leaks:contentReference[oaicite:69]{index=69}
+    - staticcheck    # (Enabled above) Comprehensive static analysis (includes `gosimple`, `unused`, etc.):contentReference[oaicite:70]{index=70}
+    - testableexamples # Require examples in docs to have output or playground comments (makes them runnable):contentReference[oaicite:71]{index=71}
+    - testifylint    # Enforce best practices when using the testify testing framework (if used):contentReference[oaicite:72]{index=72}
+#    - testpackage    # Encourage naming test package separately (avoid testing private internals):contentReference[oaicite:73]{index=73}
+    - tparallel      # Check for misuses of `t.Parallel()` in tests (common testing pitfalls):contentReference[oaicite:74]{index=74}
+    - unconvert      # Remove unnecessary type conversions (clean up redundant casts):contentReference[oaicite:75]{index=75}
+    - unparam        # Detect unused function parameters (parameters that are never used):contentReference[oaicite:76]{index=76}
+    - unused         # Detect unused code (variables, functions, etc. that are unused in the codebase):contentReference[oaicite:77]{index=77}
+    - usestdlibvars  # Suggest using standard library variables/constants instead of magic values (e.g. use time.Second):contentReference[oaicite:78]{index=78}
+    - usetesting     # Suggest using `testing` package helpers or idioms when applicable:contentReference[oaicite:79]{index=79}
+    - wastedassign   # Find assignments whose results are never used (wasted computations):contentReference[oaicite:80]{index=80}
+    - whitespace     # Detect accidental trailing whitespace and blank lines issues:contentReference[oaicite:81]{index=81}
+    - misspell       # Detect common English spelling mistakes in comments and strings (typos):contentReference[oaicite:82]{index=82}
+    - prealloc       # Suggest preallocating slices if length is known up-front (performance optimization):contentReference[oaicite:83]{index=83}
+#    - wrapcheck      # Ensure errors from external packages are wrapped before propagating (adds context):contentReference[oaicite:84]{index=84}
+#    - exhaustruct    # (Optional) Check that struct literals initialize all fields (exhaustive struct literal):contentReference[oaicite:85]{index=85}
+    - godox          # Report any TODO, FIXME, BUG comments left in code (to avoid merging forgotten tasks):contentReference[oaicite:86]{index=86}
+#    - tagalign       # Enforce alignment of struct tags (neat formatting of tag comments):contentReference[oaicite:87]{index=87}
 
-  exclude-use-default: false
-  max-same-issues: 0
-  new: false
+  # No 'disable' list needed since we start from none and only enable trusted linters.
+  # (Deprecated or noisy linters like `golint`, `lll` are excluded; e.g., `lll` is replaced by golines:contentReference[oaicite:88]{index=88}.)
+
+  # **Linter-specific configuration** (tuning some linters' parameters)
+  settings:
+    funlen:
+      lines: 100        # Allow functions up to 100 lines (default 60):contentReference[oaicite:89]{index=89}
+      statements: 50    # Allow up to 50 statements per function (default 40)
+    cyclop:
+      max-complexity: 20    # Max cyclomatic complexity per function (default 10; higher to reduce noise):contentReference[oaicite:90]{index=90}
+      package-average: 10.0 # Max average complexity per package (helps monitor overall complexity):contentReference[oaicite:91]{index=91}
+    gocyclo:
+      min-complexity: 15    # Report functions with complexity ≥ 15 (default 30; 10-20 is often recommended:contentReference[oaicite:92]{index=92})
+    misspell:
+      locale: US            # Use US English for spell-check (e.g., flag “colour” -> “color”):contentReference[oaicite:93]{index=93}
+    # (Other linters use default settings or are configured via exclude rules below)
+
+  # **Exclusions** – ignore certain issues or files (to reduce false-positives & noise)
+  exclusions:
+    warn-unused: true   # Warn if any exclude rule below doesn’t match anything (helps catch typos):contentReference[oaicite:94]{index=94}
+    presets:
+      - std-error-handling    # Use preset to ignore common false positives in error handling:contentReference[oaicite:95]{index=95}
+      - common-false-positives # Preset to ignore other common false positives (no actual bug):contentReference[oaicite:96]{index=96}
+    rules:
+      # Allow TODO/FIXME comments without ending punctuation (don’t require period at end for godot):
+      - source: 'TODO'
+        linters: [godot]  # Skip "comment should end in period" if comment contains TODO:contentReference[oaicite:97]{index=97}
+      # Do not enforce package-level comment requirement (often not needed for small packages):
+      - text: 'should have a package comment'
+        linters: [revive]  # Ignore revive rule that every package needs a comment:contentReference[oaicite:98]{index=98}
+      # Do not require comments on every exported item (skip revive’s strict rule about comments on exports):
+      - text: 'exported \\S+ \\S+ should have comment( \\(or a comment on this block\\))? or be unexported'
+        linters: [revive]  # Allow exported functions/types without comments if necessary:contentReference[oaicite:99]{index=99}
+      # If a nolint or TODO is present, skip strict comment format checks (revive & staticcheck):
+      - text: 'comment on exported \\S+ \\S+ should be of the form ".+"'
+        source: '// ?(nolint|TODO)'
+        linters: [revive, staticcheck]  # Don’t complain about comment phrasing if dev marked it nolint/TODO:contentReference[oaicite:100]{index=100}
+      - text: 'package comment should be of the form ".+"'
+        source: '// ?(nolint|TODO)'
+        linters: [revive]  # Similarly, skip package comment format complaints if nolint/TODO is there:contentReference[oaicite:101]{index=101}
+      # Exclude some linters entirely from test files (_test.go), where their warnings are less relevant:
+      - path: '_test\\.go'
+        linters:
+          - bodyclose    # In tests, not closing HTTP bodies is often acceptable or intentional
+          - dupl         # Duplicate code in tests is more tolerable (test cases may repeat setup)
+          - errcheck     # Allow ignoring errors in tests (e.g., tests may deliberately ignore an error)
+          - funlen       # Test functions can be longer (setup/teardown code), skip length check:contentReference[oaicite:102]{index=102}
+          - goconst      # It's fine if test code uses repeated literals (constants not as important)
+          - gosec        # Security issues in test code are not critical for production
+          - noctx        # Tests may not pass context in HTTP calls, which is usually fine for testing
+          - wrapcheck    # Wrapping external errors in tests is unnecessary (tests can ignore wrapping)

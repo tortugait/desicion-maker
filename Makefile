@@ -31,7 +31,7 @@ clean:
 
 .PHONY: lint
 lint:
-	$(V)golangci-lint run
+	$(V)golangci-lint-2.1.6 run
 
 # note: one may see linker warning, see https://github.com/golang/go/issues/61229#issuecomment-1988965927
 .PHONY: test

@@ -23,7 +23,11 @@ func NewDeepSeekSrv(conf DeepSeekConf) deepSeekSrv {
 	return deepSeekSrv{conf: conf}
 }
 
-func (s deepSeekSrv) GenerateReason(ctx context.Context, statement string, ok bool) (string, error) {
+func (s deepSeekSrv) GenerateReason(
+	ctx context.Context,
+	statement string,
+	ok bool,
+) (string, error) {
 	client := deepseek.NewClient(s.conf.APIKey)
 
 	systemMsg := "Create humorous explanations for boolean answers. " +
